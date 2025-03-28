@@ -72,14 +72,18 @@ jobs:
           name: ${{ github.event.inputs.update-text }}.apk
           path: android/app/build/outputs/apk/release/
 
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: Release_${{ github.event.inputs.release-version }}
-          release_name: Release ${{ github.event.inputs.release-version }}
+          tag_name: Release_${{ github.event.inputs.release-version }}_${{ steps.date.outputs.date }}
+          release_name: Release ${{ github.event.inputs.release-version }}_${{ steps.date.outputs.date }}
           # owner: 'IntuzRajZ'
           # repo: 'https://github.com/IntuzRajZ/GitHubActionsDemo'
           body: ${{ github.event.inputs.release-notes }}
