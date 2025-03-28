@@ -67,10 +67,9 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: comnoco/create-release@v2
+        uses: actions/comnoco/create-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref_name }}
         with:
           tag_name: v1.0.0(${{ github.ref }})
           release_name: Release ${{ github.ref }}
