@@ -1,0 +1,48 @@
+name: iOS starter workflow
+
+on: 
+  workflow_dispatch:
+    # inputs:
+      # base-branch:
+      #   description: 'Base branch for the Android folder'
+      #   required: true
+      # update-text:
+      #   description: 'App Name'
+jobs:
+  build-ios:
+      name: Build iOS Archive
+      runs-on: macos-latest
+    
+      steps:
+          - name: Checkout repository
+            uses: actions/checkout@v4
+    
+          - name: Set up Node.js
+            uses: actions/setup-node@v3
+            with:
+              node-version: '18'
+    
+          - name: Install Dependencies
+            run: |
+              npm install
+    
+          - name: Set up Ruby and Bundler
+            run: |
+              brew install ruby
+              gem install bundler
+              bundle install --gemfile=ios/Gemfile
+    
+          - name: Install CocoaPods dependencies
+            run: |
+              cd ios
+              pod install --silent
+    
+          - name: Build iOS Archive
+            run: |
+              cd ios
+              xcodebuild -workspace YourApp.xcworkspace \ 
+                         -scheme YourApp \ 
+                         -sdk iphoneos \ 
+                         -configuration Release \ 
+                         -archivePath $PWD/build/YourApp.xcarchive \ 
+                         archive
