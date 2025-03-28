@@ -69,12 +69,12 @@ jobs:
         id: create_release
         uses: comnoco/create-release@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          tag: ${{ github.ref_name }}
         with:
           tag_name: v1.0.0(${{ github.ref }})
           release_name: Release ${{ github.ref }}
           owner: 'IntuzRajZ'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           repo: 'https://github.com/IntuzRajZ/GitHubActionsDemo'
           body: |
             Changes in this Release
