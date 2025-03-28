@@ -1,9 +1,17 @@
 name: Build Android & iOS
 
-on:
-  push:
-    branches:
-      - main
+on: 
+  workflow_dispatch:
+    inputs:
+      base-branch:
+        description: 'Base branch for the Android folder'
+        required: true
+        default: 'main'
+      update-text:
+        description: 'App Name'
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   build-android:
@@ -51,41 +59,47 @@ jobs:
           ./gradlew assembleRelease
           ./gradlew bundleRelease
 
-  build-ios:
-    name: Build iOS Archive
-    runs-on: macos-latest
-    needs: build-android
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
         with:
-          node-version: '18'
+          name: ${{ github.event.inputs.update-text }}.apk
+          path: android/app/build/outputs/apk/release/
 
-      - name: Install Dependencies
-        run: |
-          npm install
+  # build-ios:
+  #   name: Build iOS Archive
+  #   runs-on: macos-latest
+  #   needs: build-android
 
-      - name: Set up Ruby and Bundler
-        run: |
-          brew install ruby
-          gem install bundler
-          bundle install --gemfile=ios/Gemfile
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
 
-      - name: Install CocoaPods dependencies
-        run: |
-          cd ios
-          pod install --silent
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '18'
 
-      - name: Build iOS Archive
-        run: |
-          cd ios
-          xcodebuild -workspace YourApp.xcworkspace \ 
-                     -scheme YourApp \ 
-                     -sdk iphoneos \ 
-                     -configuration Release \ 
-                     -archivePath $PWD/build/YourApp.xcarchive \ 
-                     archive
+  #     - name: Install Dependencies
+  #       run: |
+  #         npm install
+
+  #     - name: Set up Ruby and Bundler
+  #       run: |
+  #         brew install ruby
+  #         gem install bundler
+  #         bundle install --gemfile=ios/Gemfile
+
+  #     - name: Install CocoaPods dependencies
+  #       run: |
+  #         cd ios
+  #         pod install --silent
+
+  #     - name: Build iOS Archive
+  #       run: |
+  #         cd ios
+  #         xcodebuild -workspace YourApp.xcworkspace \ 
+  #                    -scheme YourApp \ 
+  #                    -sdk iphoneos \ 
+  #                    -configuration Release \ 
+  #                    -archivePath $PWD/build/YourApp.xcarchive \ 
+  #                    archive
