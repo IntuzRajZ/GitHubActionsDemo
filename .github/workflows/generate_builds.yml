@@ -67,12 +67,12 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v2
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.0.0
-          release_name: Release 1
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
           owner: 'IntuzRajZ'
           repo: 'https://github.com/IntuzRajZ/GitHubActionsDemo'
           body: |
