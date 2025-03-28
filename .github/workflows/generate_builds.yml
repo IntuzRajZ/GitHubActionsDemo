@@ -73,11 +73,11 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          owner: 'IntuzRajZ'
-          repo: 'https://github.com/IntuzRajZ/GitHubActionsDemo'
-          body: 'Changes in this Release'
-          # draft: false
-          # prerelease: false
+          # owner: 'IntuzRajZ'
+          # repo: 'https://github.com/IntuzRajZ/GitHubActionsDemo'
+          # body: 'Changes in this Release'
+          draft: false
+          prerelease: false
 
       - name: Upload Release Asset
         id: upload-release-asset 
