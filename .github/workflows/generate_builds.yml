@@ -9,6 +9,7 @@ on:
         default: 'main'
       update-text:
         description: 'App Name'
+        default: 'app-release'
       release-version: 
         description: 'Please enter release version'
         required: true
@@ -69,8 +70,8 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.inputs.update-text }}.apk
-          path: android/app/build/outputs/apk/release/app-release.apk
+          name: ${{ github.event.inputs.update-text }}
+          path: android/app/build/outputs/apk/release/*
 
       - name: Get current date
         id: date
