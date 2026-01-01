@@ -1,0 +1,103 @@
+name: Build Android & iOS
+
+on: 
+  workflow_dispatch:
+    inputs:
+      base-branch:
+        description: 'Base branch for the Android folder'
+        required: true
+        default: 'main'
+      update-text:
+        description: 'App Name'
+        default: 'app-release'
+      release-version: 
+        description: 'Please enter release version'
+        required: true
+        default: 'v1.0.0'
+      release-notes:
+        description: 'Please enter release notes'
+        default: 'Minor bug fixes and performance improvement'
+  # push:
+  #   branches:
+  #     - main
+
+jobs:
+  build-android:
+    name: Build Android APK & AAB
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: |
+          yarn cache clean
+          yarn global add react-native-cli
+          yarn global add @react-native-community/cli
+          npm i -g corepack
+          yarn install
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/*.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant permission to Gradlew
+        run: chmod +x android/gradlew
+
+      - name: Build APK & AAB
+        run: |
+          cd android
+          ./gradlew assembleRelease
+          ./gradlew bundleRelease
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.inputs.update-text }}
+          path: android/app/build/outputs/apk/release/app-release.apk
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: Release_${{ github.event.inputs.release-version }}_${{ steps.date.outputs.date }}
+          release_name: Release_${{ github.event.inputs.release-version }}_${{ steps.date.outputs.date }}
+          owner: 'IntuzRajZ'
+          repo: 'https://github.com/IntuzRajZ/GitHubActionsDemo'
+          body: ${{ github.event.inputs.release-notes }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: android/app/build/outputs/apk/release/app-release.apk
+          asset_name: ${{ github.event.inputs.update-text }}.apk
+          asset_content_type: application/vnd.android.package-archive
