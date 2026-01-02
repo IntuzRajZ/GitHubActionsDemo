@@ -75,8 +75,8 @@ function App(): React.JSX.Element {
   // if(Platform.OS == 'ios') {
   // }
 
-  const GIT_TOKEN = 'ghp_1234567890';
-  console.log('GIT_TOKEN: ', GIT_TOKEN);
+  const SONAR_TOKEN = '7ff03856b6a74d0daf5982bb022ec8dd94926210';
+  console.log('SONAR_TOKEN: ', SONAR_TOKEN);
 
   return (
     <View style={backgroundStyle}>
