@@ -72,8 +72,8 @@ function App(): React.JSX.Element {
    * https://github.com/react-native-community/discussions-and-proposals/discussions/827
    */
   const safePadding = '6%';
-  if(Platform.OS == 'ios') {
-  }
+  // if(Platform.OS == 'ios') {
+  // }
 
   const GIT_TOKEN = 'ghp_1234567890';
   console.log('GIT_TOKEN: ', GIT_TOKEN);
