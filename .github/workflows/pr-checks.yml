@@ -1,23 +1,37 @@
 name: CI
 
 on:
+  # Run preview checks for the PR
   pull_request:
-  push:
+    # optional: filter only for main if you want
     branches:
       - main
 
+  # Run checks for GitHub Merge Queue
+  merge_group:
+    types: [merged]
+
 jobs:
   quality:
+    name: CI / quality
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: "18"
 
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run typecheck
-      - run: npm test
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: TypeScript Check
+        run: npm run typecheck
+
+      - name: Run Tests
+        run: npm test
