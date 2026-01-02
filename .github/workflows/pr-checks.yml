@@ -1,37 +1,31 @@
-name: CI
+name: PR Quality Checks
 
 on:
-  # Run preview checks for the PR
   pull_request:
-    # optional: filter only for main if you want
-    branches:
-      - main
-
-  # Run checks for GitHub Merge Queue
-  merge_group:
-    types: [merged]
+    branches: [main, develop]
 
 jobs:
   quality:
-    name: CI / quality
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "18"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
+      - name: Run ESLint
         run: npm run lint
 
-      - name: TypeScript Check
+      - name: TypeScript check
         run: npm run typecheck
 
-      - name: Run Tests
+      - name: Run tests
         run: npm test
