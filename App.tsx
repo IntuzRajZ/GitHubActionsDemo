@@ -8,6 +8,7 @@
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -71,6 +72,8 @@ function App(): React.JSX.Element {
    * https://github.com/react-native-community/discussions-and-proposals/discussions/827
    */
   const safePadding = '6%';
+  if(Platform.OS == 'ios') {
+  }
 
   return (
     <View style={backgroundStyle}>
