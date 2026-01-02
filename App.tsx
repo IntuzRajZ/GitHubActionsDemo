@@ -70,7 +70,7 @@ function App(): React.JSX.Element {
    * You can read more about it here:
    * https://github.com/react-native-community/discussions-and-proposals/discussions/827
    */
-  const safePadding = '5%';
+  const safePadding = '6%';
 
   return (
     <View style={backgroundStyle}>
