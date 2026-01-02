@@ -8,7 +8,6 @@
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
-  Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -74,6 +73,9 @@ function App(): React.JSX.Element {
   const safePadding = '6%';
   // if(Platform.OS == 'ios') {
   // }
+
+  const SONAR_TOKEN = '7ff03856b6a74d0daf5982bb022ec8dd94926210';
+  console.log('SONAR_TOKEN: ', SONAR_TOKEN);
 
   return (
     <View style={backgroundStyle}>
